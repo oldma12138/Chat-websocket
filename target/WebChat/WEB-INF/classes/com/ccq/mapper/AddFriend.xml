@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ccq.mapper.AddFriend">
+    <sql id="key">
+        <trim suffixOverrides=",">
+            <if test="friend_1!=null and friend_1!=''">friend_1,</if>
+            <if test="friend_2!=null and friend_2!=''">friend_2,</if>
+            <if test="f1_allow!=null and f1_allow!=''">f1_allow,</if>
+            <if test="f2_allow!=null and f2_allow!=''">f2_allow,</if>
+            <if test="addtime!=null and addtime!=''">addtime,</if>
+        </trim>
+
+    </sql>
+
+    <sql id="value">
+        <trim suffixOverrides=",">
+            <if test="friend_1!=null and friend_1!=''">#{friend_1},</if>
+            <if test="friend_2!=null and friend_2!=''">#{friend_2},</if>
+            <if test="f1_allow!=null and f1_allow!=''">#{f1_allow},</if>
+            <if test="f2_allow!=null and f2_allow!=''">#{f2_allow},</if>
+            <if test="addtime!=null and addtime!=''">#{addtime},</if>
+        </trim>
+
+    </sql>
+    <insert id="addFriend" parameterType="com.ccq.pojo.AddFriend">
+
+        insert into t_addfriend(<include refid="key"/>) values(<include refid="value"/>)
+
+    </insert>
+    <select id="findFriendRequest" parameterType="java.lang.String" resultType="com.ccq.pojo.AddFriend">
+        select * from t_addfriend where friend_2=#{userName} and f2_allow is null
+</select>
+    <select id="responseMessage" parameterType="java.lang.String" resultType="com.ccq.pojo.AddFriend">
+        select * from t_addfriend t where t.friend_1=#{userName} and t.f2_allow is not null
+</select>
+
+    <delete id="delFriendRequest" parameterType="java.lang.String">
+        delete from t_addfriend where friend_1=#{userName} and f2_allow is not null
+</delete>
+    <update id="friendReqResp" parameterType="com.ccq.pojo.AddFriend">
+        update t_addfriend set f2_allow=#{f2_allow} where friend_2=#{friend_2} and friend_1=#{friend_1}
+    </update>
+    <select id="findaddfriend" resultType="com.ccq.pojo.AddFriend">
+        select * from t_addfriend  where friend_1= #{0} and friend_2= #{1}
+    </select>
+
+</mapper>
